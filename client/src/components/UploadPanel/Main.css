@@ -1,0 +1,145 @@
+/* Main.css */
+
+.panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 370px;
+    height: 100vh;
+    background-color: #f0f4f9;
+    color: #585858;
+    box-shadow: 0px 0 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.panel.open {
+    transform: translateX(0);
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #585858;
+}
+
+.panel-content {
+    padding: 20px;
+}
+
+/* Main.css */
+
+.file-list {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.file-item:hover {
+    background-color: #f1f1f1;
+}
+
+.file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.delete-button {
+    background: #ffffff00;
+    border: none;
+    /* color: #fff; */
+    border-radius: 50%;
+    width: 35px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    /* background-color: #fadedb; */
+}
+
+.file-input {
+    display: none;
+}
+
+/* Create a custom button to trigger the file input */
+.custom-file-input {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: grey;
+    background-color: #e6eaf1;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-file-input:hover {
+    background-color: #e6eaf1;
+    color: #333;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Use a label to trigger the file input */
+.file-label {
+    display: inline-block;
+    width: 100%;
+}
+
+.file-label input {
+    display: none;
+}
+
+.upload-button-final{
+    bottom: 50px;
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: grey;
+    background-color: #e6eaf1;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    position: absolute;
+}
+
+
+.upload-button-final:hover{
+    background-color: grey;
+    color: #e6eaf1;
+}
