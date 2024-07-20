@@ -1,3 +1,92 @@
+// import { createContext, useState } from "react";
+// import runChat from "../config/gemini";
+
+// export const Context = createContext();
+
+// const ContextProvider = (props) => {
+
+//     const [prevPrompts, setPrevPrompts] = useState([]);
+//     const [input, setInput] = useState("");
+//     const [recentPrompt, setRecentPrompt] = useState("");
+//     const [showResult, setShowResult] = useState(false);
+//     const [loading, setLoading] = useState(false);
+//     const [resultData, setResultData] = useState("");
+//     const [showPanel, setShowPanel] = useState(false);
+    
+
+//     function delayPara(index, nextWord) {
+//         setTimeout(function () {
+//             setResultData(prev => prev + nextWord)
+//         }, 75 * index);
+//     }
+
+//     const onSent = async (prompt) => {
+
+//         setResultData("")
+//         setLoading(true)
+//         setShowResult(true)
+//         let response;   
+//         if (prompt !== undefined) {
+//             response = await runChat(prompt);
+//             setRecentPrompt(prompt)
+//         }
+//         else {
+//             setPrevPrompts(prev => [...prev, input]);
+//             setRecentPrompt(input)
+//             response = await runChat(input);
+//         }
+//         let responseArray = response.split('**');
+//         let newArray = "";
+//         for (let i = 0; i < responseArray.length; i++) {
+//             if (i === 0 || i % 2 !== 1) {
+//                 newArray += responseArray[i]
+//             }
+//             else {
+//                 newArray += "<b>" + responseArray[i] + "</b>"
+//             }
+//         }
+//         console.log(newArray);
+//         responseArray = newArray.split('*').join("</br>").split(" ");
+//         for (let i = 0; i < responseArray.length; i++) {
+//             const nextWord = responseArray[i];
+//             delayPara(i, nextWord + " ")
+//         }
+//         setLoading(false);
+//         setInput("")
+
+//     }
+
+//     const newChat = async () => {
+//         setLoading(false);
+//         setShowResult(false);
+//     }
+
+
+//     const contextValue = {
+//         prevPrompts,
+//         setPrevPrompts,
+//         onSent,
+//         setRecentPrompt,
+//         recentPrompt,
+//         showResult,
+//         loading,
+//         resultData,
+//         input,
+//         setInput,
+//         newChat,
+//         showPanel,
+//         setShowPanel
+//     }
+
+//     return (
+//         <Context.Provider value={contextValue}>
+//             {props.children}
+//         </Context.Provider>
+//     )
+// }
+
+// export default ContextProvider
+
 import { createContext, useState } from "react";
 import runChat from "../config/gemini";
 
@@ -11,8 +100,8 @@ const ContextProvider = (props) => {
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
-    const [showPanel, setShowPanel] = useState(true);
-
+    const [showPanel, setShowPanel] = useState(false);
+    const [messages, setMessages] = useState([]); // New state for messages
 
     function delayPara(index, nextWord) {
         setTimeout(function () {
@@ -21,19 +110,22 @@ const ContextProvider = (props) => {
     }
 
     const onSent = async (prompt) => {
-
         setResultData("")
         setLoading(true)
         setShowResult(true)
-        let response;
+        let response;   
         if (prompt !== undefined) {
             response = await runChat(prompt);
             setRecentPrompt(prompt)
+            // Add user message to messages
+            setMessages(prev => [...prev, { type: 'user', content: prompt }]);
         }
         else {
             setPrevPrompts(prev => [...prev, input]);
             setRecentPrompt(input)
             response = await runChat(input);
+            // Add user message to messages
+            setMessages(prev => [...prev, { type: 'user', content: input }]);
         }
         let responseArray = response.split('**');
         let newArray = "";
@@ -47,10 +139,16 @@ const ContextProvider = (props) => {
         }
         console.log(newArray);
         responseArray = newArray.split('*').join("</br>").split(" ");
+        let fullResponse = "";
         for (let i = 0; i < responseArray.length; i++) {
+            // const nextWord = responseArray[i];
+            // delayPara(i, nextWord + " ")
             const nextWord = responseArray[i];
+            fullResponse += nextWord + " ";
             delayPara(i, nextWord + " ")
         }
+        // Add AI response to messages
+        setMessages(prev => [...prev, { type: 'ai', content: fullResponse }]);
         setLoading(false);
         setInput("")
     }
@@ -58,8 +156,8 @@ const ContextProvider = (props) => {
     const newChat = async () => {
         setLoading(false);
         setShowResult(false);
+        setMessages([]); // Clear messages when starting a new chat
     }
-
 
     const contextValue = {
         prevPrompts,
@@ -74,7 +172,9 @@ const ContextProvider = (props) => {
         setInput,
         newChat,
         showPanel,
-        setShowPanel
+        setShowPanel,
+        messages, // Add messages to context
+        setMessages // Add setMessages to context
     }
 
     return (
