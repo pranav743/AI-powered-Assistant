@@ -110,11 +110,29 @@ import { useContext, useState, useEffect } from 'react';
 import './Sidebar.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
+import axios from 'axios';
+import DOMPurify from 'dompurify';
 
 const Sidebar = () => {
     const [extended, setExtended] = useState(false);
-    const { onSent, prevPrompts, setRecentPrompt, newChat,getSummary } = useContext(Context);
+    const { onSent, prevPrompts, setRecentPrompt, newChat, onSummary } = useContext(Context);
+    const [summary, setSummary] = useState();
 
+    const formatMessage1 = (text) => {
+        const sanitizedText = DOMPurify.sanitize(text);
+        return sanitizedText
+      }
+
+    const getSummary = async () => {
+        try {
+            const response = await axios.get("http://localhost:5000/get-summary");
+            console.log(response.data.summary)
+            setSummary(formatMessage1(response.data.summary))
+        } catch (error) {
+            console.log(error)
+            setSummary("There was Some Error in Summarizing the Article")
+        }
+    }
     useEffect(() => {
         const sidebar = document.querySelector('.sidebar');
         const newChatButton = document.querySelector('.new-chat');
@@ -152,10 +170,15 @@ const Sidebar = () => {
                     <img src={assets.plus_icon} alt="" />
                     {extended ? <p>New Chat</p> : null}
                 </div>
-                <div onClick={ ()=> getSummary() } className="new-summary">
+                <div onClick={onSummary} className="new-summary">
                     <img src={assets.summary_icon} alt="" />
                     {extended ? <p>Get Summary</p> : null}
                 </div>
+
+                <div className="message-content" >
+                  <div dangerouslySetInnerHTML={{ __html: formatMessage1(summary) }}></div>
+                </div>
+
                 {extended ? (
                     <div className="recent">
                         {/* <p className='recent-title'>Recent</p> */}

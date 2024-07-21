@@ -217,6 +217,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import DOMPurify from 'dompurify';
 
 const CodeFormatter = ({ code, language }) => {
   return (
@@ -335,6 +336,11 @@ const Main = () => {
     setDarkMode(!darkMode);
   };
 
+  const formatMessage1 = (text) => {
+    const sanitizedText = DOMPurify.sanitize(text);
+    return sanitizedText
+  }
+
   const handleSend = () => {
     if (input.trim()) {
       const newMessage = { type: 'user', content: input };
@@ -377,8 +383,9 @@ const Main = () => {
                   <img src={message.type === 'user' ? assets.user_icon : assets.gemini_icon} alt="" />
                   <p>{message.type === 'user' ? 'You' : 'DataWhiz'}</p>
                 </div>
-                <div className="message-content">
-                  {formatMessage(message.content)}
+                <div className="message-content" >
+                  <div dangerouslySetInnerHTML={{ __html: formatMessage1(message.content) }}></div>
+                
                 </div>
               </div>
             ))}

@@ -166,6 +166,68 @@ const ContextProvider = (props) => {
         setInput("")
     }
 
+    const getSummary = async () => {
+        try {
+            const response = await axios.get("http://localhost:5000/get-summary");
+            console.log(response.data.summary)
+            return response.data.summary
+        } catch (error) {
+            console.log(error)
+            return "There was Some Error in Summarizing the Article"
+        }
+    }
+
+
+    const onSummary = async (prompt) => {
+        prompt = "Summary -"
+        setResultData("")
+        setLoading(true)
+        setShowResult(true)
+        let response;   
+        if (prompt !== undefined) {
+            setRecentPrompt(prompt)
+            // response = await runChat(prompt);
+            response = await getSummary();          
+            // Add user message to messages
+            setMessages(prev => [...prev, { type: 'user', content: prompt }]);
+        }
+        else {
+            setPrevPrompts(prev => [...prev, input]);
+            setRecentPrompt(input)
+            response = await getSummary();
+            // Add user message to messages
+            setMessages(prev => [...prev, { type: 'user', content: input }]);
+        }
+        console.log("RESPONSE")
+        console.log(response)
+        let responseArray = response.split('**');
+        let newArray = "";
+        for (let i = 0; i < responseArray.length; i++) {
+            if (i === 0 || i % 2 !== 1) {
+                newArray += responseArray[i]
+            }
+            else {
+                newArray += "<b>" + responseArray[i] + "</b>"
+            }
+        }
+        console.log(newArray);
+        responseArray = newArray.split('*').join("</br>").split(" ");
+        let fullResponse = "";
+        for (let i = 0; i < responseArray.length; i++) {
+            // const nextWord = responseArray[i];
+            // delayPara(i, nextWord + " ")
+            const nextWord = responseArray[i];
+            fullResponse += nextWord + " ";
+            delayPara(i, nextWord + " ")
+        }
+        console.log("FULL RESPONSE: ")
+        console.log(fullResponse)
+        // Add AI response to messages
+        setMessages(prev => [...prev, { type: 'ai', content: fullResponse }]);
+        setLoading(false);
+        // setInput("")
+    }
+
     const newChat = async () => {
         setLoading(false);
         setShowResult(false);
@@ -176,6 +238,7 @@ const ContextProvider = (props) => {
         prevPrompts,
         setPrevPrompts,
         onSent,
+        onSummary,
         setRecentPrompt,
         recentPrompt,
         showResult,
