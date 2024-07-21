@@ -118,11 +118,15 @@ const Sidebar = () => {
     useEffect(() => {
         const sidebar = document.querySelector('.sidebar');
         const newChatButton = document.querySelector('.new-chat');
+        const summaryButton = document.querySelector('.new-summary');
         if (sidebar) {
             sidebar.style.width = extended ? '250px' : '80px';
         }
         if (newChatButton) {
             newChatButton.style.width = extended ? '200px' : '53px';
+        }
+        if (summaryButton) {
+            summaryButton.style.width = extended ? '200px' : '53px';
         }
     }, [extended]);
 

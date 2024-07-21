@@ -293,7 +293,7 @@
   }
   
   .ai .message-content {
-    color: #0056b3;
+    color: black;
   }
   
   .dark-mode .user .message-content {
@@ -301,5 +301,30 @@
   }
   
   .dark-mode .ai .message-content {
-    color: #9ed7ff;
+    color: white;
+  }
+
+  .message-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  .message-content a {
+    color: black;
+    text-decoration: none;
+  }
+  
+  .message-content a:hover {
+    text-decoration: underline;
+  }
+  
+  .message-content ul, .message-content ol {
+    padding-left: 20px;
+  }
+  
+  .message-content pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
   }
