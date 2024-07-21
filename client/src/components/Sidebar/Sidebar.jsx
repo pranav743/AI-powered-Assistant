@@ -113,7 +113,7 @@ import { Context } from '../../context/Context';
 
 const Sidebar = () => {
     const [extended, setExtended] = useState(false);
-    const { onSent, prevPrompts, setRecentPrompt, newChat } = useContext(Context);
+    const { onSent, prevPrompts, setRecentPrompt, newChat,getSummary } = useContext(Context);
 
     useEffect(() => {
         const sidebar = document.querySelector('.sidebar');
@@ -147,6 +147,10 @@ const Sidebar = () => {
                 <div onClick={() => newChat()} className="new-chat">
                     <img src={assets.plus_icon} alt="" />
                     {extended ? <p>New Chat</p> : null}
+                </div>
+                <div onClick={ ()=> getSummary() } className="new-summary">
+                    <img src={assets.summary_icon} alt="" />
+                    {extended ? <p>Get Summary</p> : null}
                 </div>
                 {extended ? (
                     <div className="recent">
