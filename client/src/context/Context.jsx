@@ -89,6 +89,7 @@
 
 import { createContext, useState } from "react";
 import runChat from "../config/gemini";
+import axios from 'axios';
 
 export const Context = createContext();
 
@@ -109,14 +110,26 @@ const ContextProvider = (props) => {
         }, 75 * index);
     }
 
+    const askQuestion = async (q) => {
+        try {
+            const response = await axios.post("http://localhost:5000/ask-question/", {question: q})
+            console.log(response.data.response)
+            return response.data.response;
+        } catch (error) {
+            return "There was an Error"
+        }
+    }
+
     const onSent = async (prompt) => {
         setResultData("")
         setLoading(true)
         setShowResult(true)
         let response;   
         if (prompt !== undefined) {
-            response = await runChat(prompt);
             setRecentPrompt(prompt)
+            // response = await runChat(prompt);
+            response = await askQuestion(prompt);            
+            
             // Add user message to messages
             setMessages(prev => [...prev, { type: 'user', content: prompt }]);
         }
